@@ -1,0 +1,179 @@
+#Creating tables
+
+CREATE TABLE Facilities (
+    Facility_ID INTEGER PRIMARY KEY,
+    Owner_ID INTEGER,
+    License_ID INTEGER,
+    Location TEXT,
+    FOREIGN KEY (Owner_ID) REFERENCES Owners(Owner_ID),
+    FOREIGN KEY (License_ID) REFERENCES Licenses(License_ID)
+);
+
+CREATE TABLE Owners (
+    Owner_ID INTEGER PRIMARY KEY,
+    Name TEXT,
+    Contact_Info TEXT,
+    Age INTEGER
+);
+
+CREATE TABLE Licenses (
+    License_ID INTEGER PRIMARY KEY,
+    License_Details TEXT,
+    Issue_Date DATE,
+    Expiry_Date DATE
+);
+
+CREATE TABLE Employees (
+    Employee_ID INTEGER PRIMARY KEY,
+    Facility_ID INTEGER,
+    Name TEXT,
+    Position TEXT,
+    FOREIGN KEY (Facility_ID) REFERENCES Facilities(Facility_ID)
+);
+
+CREATE TABLE Health_Management (
+    Health_M_ID INTEGER PRIMARY KEY,
+    Employee_ID INTEGER,
+    Disease_Issue TEXT,
+    Treatment TEXT,
+    FOREIGN KEY (Employee_ID) REFERENCES Employees(Employee_ID)
+);
+
+CREATE TABLE Feeding (
+    Feeding_ID INTEGER PRIMARY KEY,
+    Facility_ID INTEGER,
+    Supplier_ID INTEGER,
+    Feed_Type TEXT,
+    Amount_of_Feed FLOAT,
+    FOREIGN KEY (Facility_ID) REFERENCES Facilities(Facility_ID),
+    FOREIGN KEY (Supplier_ID) REFERENCES Suppliers(Supplier_ID)
+);
+
+CREATE TABLE Suppliers (
+    Supplier_ID INTEGER PRIMARY KEY,
+    Name TEXT,
+    Phone_number INTEGER,
+    Email TEXT
+);
+
+CREATE TABLE Fish_Stock (
+    Fish_Stock_ID INTEGER PRIMARY KEY,
+    Facility_ID INTEGER,
+    Species TEXT,
+    Number_of_Fish INTEGER,
+    FOREIGN KEY (Facility_ID) REFERENCES Facilities(Facility_ID)
+);
+
+CREATE TABLE Environmental_Data (
+    Data_ID INTEGER PRIMARY KEY,
+    Facility_ID INTEGER,
+    Water_Temp FLOAT,
+    Algae_Levels FLOAT,
+    FOREIGN KEY (Facility_ID) REFERENCES Facilities(Facility_ID)
+);
+
+CREATE TABLE Harvest_Export (
+    Harvest_ID INTEGER PRIMARY KEY,
+    Facility_ID INTEGER,
+    Export_Dest_ID INTEGER,
+    Quantity FLOAT,
+    FOREIGN KEY (Facility_ID) REFERENCES Facilities(Facility_ID),
+    FOREIGN KEY (Export_Dest_ID) REFERENCES Export_Destinations(Export_Dest_ID)
+);
+
+CREATE TABLE Export_Destinations (
+    Export_Dest_ID INTEGER PRIMARY KEY,
+    Country TEXT,
+    Port TEXT,
+    Continent TEXT
+);
+
+#Samples
+
+-- Insert sample data into Owners Table
+INSERT INTO Owners (Owner_ID, Name, Contact_Info, Age) VALUES
+(1, 'Ola Hansen', 'ola.hansen@example.com', 45),
+(2, 'Kari Nordmann', 'kari.nordmann@example.com', 39),
+(3, 'Per Johansen', 'per.johansen@example.com', 50),
+(4, 'Ingrid Olsen', 'ingrid.olsen@example.com', 42),
+(5, 'Einar Larsen', 'einar.larsen@example.com', 36);
+
+-- Insert sample data into Licenses Table
+INSERT INTO Licenses (License_ID, License_Details, Issue_Date, Expiry_Date) VALUES
+(1, 'Standard Lisens', '2022-01-01', '2027-01-01'),
+(2, 'Spesiell Lisens', '2021-06-15', '2026-06-15'),
+(3, 'Utvidet Lisens', '2023-03-10', '2028-03-10'),
+(4, 'Eksport Lisens', '2020-09-20', '2025-09-20'),
+(5, 'Forskning Lisens', '2019-12-05', '2024-12-05');
+
+-- Insert sample data into Facilities Table
+INSERT INTO Facilities (Facility_ID, Owner_ID, License_ID, Location) VALUES
+(1, 1, 1, 'Lofoten'),
+(2, 2, 2, 'Tromsø'),
+(3, 3, 3, 'Bergen'),
+(4, 4, 4, 'Ålesund'),
+(5, 5, 5, 'Stavanger');
+
+-- Insert sample data into Employees Table
+INSERT INTO Employees (Employee_ID, Facility_ID, Name, Position) VALUES
+(1, 1, 'Lars Pedersen', 'Driftsleder'),
+(2, 2, 'Eva Jakobsen', 'Fiskepleier'),
+(3, 3, 'Jonas Nilsen', 'Tekniker'),
+(4, 4, 'Nina Kristiansen', 'Biolog'),
+(5, 5, 'Kristoffer Ås', 'Kvalitetsinspektør');
+
+-- Insert sample data into Health Management Table
+INSERT INTO Health_Management (Health_M_ID, Employee_ID, Disease_Issue, Treatment) VALUES
+(1, 1, 'Lus', 'Lusebehandling'),
+(2, 2, 'Fiskelus', 'Varmebehandling'),
+(3, 3, 'Fungal Infection', 'Antifungal behandling'),
+(4, 4, 'Gillsykdom', 'Antibiotika'),
+(5, 5, 'Skinnsår', 'Saltbad');
+
+-- Insert sample data into Suppliers Table
+INSERT INTO Suppliers (Supplier_ID, Name, Phone_number, Email) VALUES
+(1, 'Fiskefôr AS', 98765432, 'kontakt@fiskefor.no'),
+(2, 'Havbruk Mat', 91234567, 'post@havbrukmat.no'),
+(3, 'Laksefôr Norge', 98765431, 'info@laksefor.no'),
+(4, 'Norsk Fôrindustri', 92345678, 'kundeservice@norskforind.no'),
+(5, 'Maritim Fiskefôr', 97654321, 'support@maritimfor.no');
+
+-- Insert sample data into Feeding Table
+INSERT INTO Feeding (Feeding_ID, Facility_ID, Supplier_ID, Feed_Type, Amount_of_Feed) VALUES
+(1, 1, 1, 'Pellet', 120.5),
+(2, 2, 2, 'Våtfôr', 95.3),
+(3, 3, 3, 'Tørrfôr', 110.2),
+(4, 4, 4, 'Granulat', 89.7),
+(5, 5, 5, 'Spesialfôr', 130.0);
+
+-- Insert sample data into Fish Stock Table
+INSERT INTO Fish_Stock (Fish_Stock_ID, Facility_ID, Species, Number_of_Fish) VALUES
+(1, 1, 'Laks', 50000),
+(2, 2, 'Ørret', 30000),
+(3, 3, 'Kveite', 25000),
+(4, 4, 'Torsk', 45000),
+(5, 5, 'Sei', 20000);
+
+-- Insert sample data into Environmental Data Table
+INSERT INTO Environmental_Data (Data_ID, Facility_ID, Water_Temp, Algae_Levels) VALUES
+(1, 1, 13.5, 0.3),
+(2, 2, 14.2, 0.2),
+(3, 3, 12.8, 0.4),
+(4, 4, 15.0, 0.5),
+(5, 5, 13.0, 0.1);
+
+-- Insert sample data into Export Destinations Table
+INSERT INTO Export_Destinations (Export_Dest_ID, Country, Port, Continent) VALUES
+(1, 'Norge', 'Oslo', 'Europa'),
+(2, 'Sverige', 'Stockholm', 'Europa'),
+(3, 'Danmark', 'København', 'Europa'),
+(4, 'Tyskland', 'Hamburg', 'Europa'),
+(5, 'USA', 'New York', 'Nord-Amerika');
+
+-- Insert sample data into Harvest & Export Table
+INSERT INTO Harvest_Export (Harvest_ID, Facility_ID, Export_Dest_ID, Quantity) VALUES
+(1, 1, 1, 2000),
+(2, 2, 2, 2500),
+(3, 3, 3, 1500),
+(4, 4, 4, 3000),
+(5, 5, 5, 3500);
