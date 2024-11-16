@@ -1,0 +1,22 @@
+set DAYS := Mon Tue Wed Thu Fri Sat Sun;
+
+param D :=
+Mon 1200
+Tue 1500
+Wed 2120
+Thu 2050
+Fri 2950
+Sat 3400
+Sun 3200;
+
+param m :=
+Mon -46
+Tue -38
+Wed -40
+Thu -52
+Fri -50
+Sat -54
+Sun -56;
+
+param max_capacity := 800;
+param min_tickets := 100;

@@ -1,0 +1,50 @@
+# Reset the AMPL environment to clear any previous data or model
+reset;
+
+# Load the model and data files
+model Nutcracker_2.mod;
+data Nutcracker_2.dat;
+
+# Set the solver to MINOS
+option solver minos;
+
+# Solve the optimization problem
+solve;
+
+# Display the optimal prices and Friday pricing decision
+display weekday_price, weekend_price, friday_pricing;
+
+# Display the demand (number of tickets sold) for each day
+display Q;
+
+# Print the total revenue
+printf "\nTotal Revenue: %.2f\n", Total_Revenue;
+
+# Print the revenue for each day
+printf "\nRevenue per day:\n";
+for {i in DAYS} {
+    # Calculate revenue based on the day type (weekday, weekend, or Friday)
+    printf "%s: %.2f\n", i, (
+        if i in WEEKDAYS then 
+            weekday_price * Q[i]
+        else if i in WEEKEND then 
+            weekend_price * Q[i]
+        else 
+            # For Friday, use either weekday or weekend price based on friday_pricing
+            ((1 - friday_pricing) * weekday_price + friday_pricing * weekend_price) * Q[i]
+    );
+}
+
+# Print the percentage of maximum daily capacity utilized
+printf "\nPercentage of maximum daily capacity:\n";
+for {i in DAYS} {
+    printf "%s: %.2f%%\n", i, 100 * Q[i] / max_capacity;
+}
+
+# Print the pricing strategy for Friday
+printf "\nFriday pricing strategy: ";
+if friday_pricing == 0 then
+    printf "Weekday pricing\n";
+if friday_pricing == 1 then
+    printf "Weekend pricing\n";
+

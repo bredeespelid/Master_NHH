@@ -1,0 +1,26 @@
+reset;
+# Load the model and data
+model Nutcracker_1.mod;
+data Nutcracker_1.dat;
+
+# Set the solver
+option solver minos;
+
+# Solve the problem
+solve;
+
+# Display results
+display p;
+display Q;
+
+printf "\nTotal Revenue: %.2f\n", Total_Revenue;
+
+printf "\nRevenue per day:\n";
+for {i in DAYS} {
+    printf "%s: %.2f\n", i, p[i] * Q[i];
+}
+
+printf "\nPercentage of maximum daily capacity:\n";
+for {i in DAYS} {
+    printf "%s: %.2f%%\n", i, 100 * Q[i] / max_capacity;
+}

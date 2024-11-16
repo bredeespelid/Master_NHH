@@ -1,0 +1,13 @@
+# Run file for period 2 analysis
+
+# Reset the AMPL environment
+reset;
+
+# Load the model
+model model.mod;
+
+# Set the data file
+let datafile := "hour.dat";
+
+solve;
+
