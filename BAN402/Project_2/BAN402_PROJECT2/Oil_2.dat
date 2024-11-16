@@ -1,0 +1,187 @@
+set Refineries := R1,R2; #refineries 
+set CrudeOils := CrA, CrB; # crude oils
+set Components := distilA, distilB, ISO, POL; #components
+set FinalProducts := premium, regular, distilF, super; #final products
+
+set Depots := D1, D2; 	#depots
+
+set Markets := K1, K2, K3, K4, K5, K6, K7, K8, K9, EN1, EN2, ES1, ES2; #markets
+set ExtremeMarkets := EN1, EN2, ES1, ES2; #extreme market
+set NorthExtremeMarket := EN1, EN2; #in north
+set SouthExtremeMarket := ES1, ES2; #in south 
+
+set TimePeriods := 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10; #time periods
+
+
+param Ccru  # cost of one unit of crude oil
+	:1   2   3   4   5   6   7   8   9   10:=
+CrA     77 77 77 77 77 82 82 82 82 82
+CrB 	75 75 75 75 75 80 80 80 80 80 
+;
+
+param a := # amount of component b obtained from one unit of crude  oil i refined at refinery r
+R1 CrA distilA 	0.15	
+R1 CrA distilB 	0.25	
+R1 CrA ISO	0.2	
+R1 CrA POL	0.4	
+R1 CrB distilA 	0.24	
+R1 CrB distilB 	0.16	
+R1 CrB ISO	0.4	
+R1 CrB POL	0.2	
+R2 CrA distilA  0.1
+R2 CrA distilB  0.3
+R2 CrA ISO 	0.18
+R2 CrA POL 	0.42 
+R2 CrB distilA 	0.22
+R2 CrB distilB 	0.18
+R2 CrB ISO 	0.37
+R2 CrB POL 	0.23
+; 
+
+param Q : premium regular distilF super := # amount of component b needed in recipe for one unit of product p
+distilA 	0	0.2	0.4	0
+distilB 	0.1	0	0.6	0
+ISO			0.4	0.5	0	0.4
+POL 		0.5	0.3	0	0.6
+;
+	     
+param S := # sales price of product p
+premium 576
+regular 525
+distilF 500
+super   550
+;
+ 
+param Cdis := #cost of processing one unit of crude oil i in refinery r
+R1 CrA 	74 	
+R1 CrB 	75	
+R2 CrA 	76 	
+R2 CrB 	77	
+;
+
+param Cpro := #cost of producing one unit of product p at the hub
+premium 35
+regular 30
+distilF 25
+super   30
+;
+
+param Ctra1 := 5; #cost of transporting one unit of any component from a refinery to the hub
+
+param Ctra2 := #cost of transporting one unit of any product from the hub to depot d
+D1 10
+D2 12
+;
+
+param Ctra3 : #cost of transporting one unit of any product from depot d to market k
+	K1  K2  K3  K4  K5  K6  K7  K8	K9  EN1 EN2 ES1 ES2:= 
+D1	10  12  14  17  20  20  24  26	28   45	    47	   44	    47
+D2	22  20  23  18  16  13  10  11	10   50	    48	   42	    49
+;
+
+param CExtreme :=#fixed cost per period for shipping to extreme North and extreme South
+D1		1500
+D2  	1750
+;
+
+param Cinvi := 2; #daily cost of storing one unit of crude oil
+param Cinvb := 4; #daily cost of storing one unit of component
+param Cinvp := #daily cost of storing one unit of any product p at depot d 
+D1 3
+D2 3
+; 
+
+param delta := #maximum demand limit for product p in market k in period t
+[premium,*,*]:	0	1	2	3	4	5	6	7	8	9	10	:=
+ K1				0	0	50	50	50	80	80	87	79	69	60	
+ K2				0	0	0	0	0	0	0	8	1	0	0	
+ K3				0	0	0	0	0	0	0	10	1	0	0	
+ K4				0	0	80	80	80	120	120	130	123	116	106	
+ K5				0	0	20	20	40	40	40	47	38	33	23	
+ K6				0	0	0	0	0	0	0	5	0	0	0	
+ K7				0	0	50	50	50	60	60	67	60	52	46	
+ K8				0	0	10	10	10	20	20	30	25	19	14	
+ K9				0	0	15	15	15	20	20	28	18	11	5	
+ EN1			0	0	0	5	5	7	7	16	11	1	0	
+ EN2			0	0	0	6	8	9	9	12	10	2	0	
+ ES1			0	0	0	4	5	7	7	11	5	1	0	
+ ES2			0	0	0	6	4	9	9	9	6	2	0	
+
+ 
+[regular,*,*]:	0	1	2	3	4	5	6	7	8	9	10	:=
+ K1				0	0	25	35	35	45	45	53	44	37	29	
+ K2				0	0	80	80	80	80	80	85	78	71	62	
+ K3				0	0	30	60	60	80	80	89	84	76	68	
+ K4				0	0	50	50	50	50	50	58	49	39	32	
+ K5				0	0	100	100	120	120	120	125	115	105	98	
+ K6				0	0	60	60	85	85	85	91	82	72	63	
+ K7				0	0	30	30	40	50	60	67	58	48	41	
+ K8				0	0	40	40	40	40	40	47	39	30	22	
+ K9				0	0	40	40	40	50	40	48	40	30	25	
+ EN1			0	0	0	5	6	6	6	13	3	0	0	
+ EN2			0	0	0	4	6	6	6	10	10	0	0	
+ ES1			0	0	0	5	6	6	6	6	3	0	0	
+ ES2			0	0	0	6	6	6	6	8	8	0	0	
+ 
+[distilF,*,*]:	0	1	2	3	4	5	6	7	8	9	10	:=
+ K1				0	0	15	15	15	15	15	20	10	5	0	
+ K2				0	0	10	10	10	10	10	16	8	3	0	
+ K3				0	0	20	20	20	20	20	30	20	15	8	
+ K4				0	0	22	22	22	22	22	32	25	15	10	
+ K5				0	0	10	10	10	10	10	16	7	0	0	
+ K6				0	0	0	0	0	0	0	7	0	0	0	
+ K7				0	0	0	0	0	0	0	5	0	0	0	
+ K8				0	0	0	0	0	0	0	9	1	0	0	
+ K9				0	0	20	20	20	25	25	31	26	17	8	
+ EN1			0	0	0	3	3	5	5	11	1	0	0	
+ EN2			0	0	0	3	3	5	5	11	1	0	0			
+ ES1			0	0	0	3	3	5	5	11	1	0	0	
+ ES2			0	0	0	3	3	5	5	11	1	0	0	
+													
+[super,*,*]:	0	1	2	3	4	5	6	7	8	9	10	:=
+ K1				0	0	25	20	10	10	10	16	8	3	0	
+ K2				0	0	0	0	0	0	0	9	0	0	0	
+ K3				0	0	15	15	15	15	15	24	18	8	3	
+ K4				0	0	15	15	15	15	15	24	16	8	0	
+ K5				0	0	10	10	10	10	10	15	10	3	0	
+ K6				0	0	40	40	40	40	40	46	38	28	20	
+ K7				0	0	0	0	0	0	0	8	2	0	0	
+ K8				0	0	15	15	30	30	30	35	26	19	11	
+ K9				0	0	10	10	10	12	15	22	16	8	2	
+ EN1			0	0	0	4	4	4	4	8	8	1	0	
+ EN2			0	0	0	5	5	5	5	12	8	2	0	
+ ES1			0	0	0	5	5	5	5	7	8	2	0	
+ ES2			0	0	0	5	5	5	5	14	8	1	0	
+;												
+
+param IfinalCo:= #final inventory of component b
+distilA		100
+distilB		100
+ISO			400
+POL			400
+;
+
+
+param Izero: #initial inventory of product p at depot d
+			D1		D2		:=
+premium		210		210
+regular		400		470
+distilF		54		100
+super		200		135
+;
+
+param Ifinal: #final inventory of product p at depot d
+			D1		D2		:=
+premium		125		100
+regular		200		250
+distilF		50		30
+super		30		60
+;
+
+
+param MaxCap:= #maximum processing capacity of crude oil per day 
+R1	850
+R2	810
+;
+
+

@@ -1,0 +1,61 @@
+reset;
+model Oil.mod;
+data Oil_2.dat;
+option solver gurobi;
+solve;
+
+# Display decision variables to understand their values after optimization
+display Purchase;  # Quantity of each crude oil purchased per time period
+display Allocate;  # Allocation of crude oil to each refinery
+display Transfer;  # Quantity of components transferred to the hub
+display Produce;   # Quantity of final products produced per period
+display Ship;      # Quantity shipped to depots
+display Deliver;   # Quantity delivered to markets
+display RawStock;  # Inventory level of crude oil at refineries
+display IntStock;  # Inventory level of components at the hub
+display EndStock;  # Inventory level of final products at depots
+
+# Display binary variables for shipments to extreme markets
+display NorthFlag; # Binary variable for shipments to extreme North market
+display SouthFlag; # Binary variable for shipments to extreme South market
+
+# Display other important parameters
+display MaxCap;    # Maximum production capacity per refinery
+display Deliver;   # Quantity delivered to markets
+display delta;     # Demand for final products in each market and period
+
+# Calculate unsatisfied demand
+param unsatisfied_demand {p in FinalProducts, k in Markets, t in TimePeriods};
+let {p in FinalProducts, k in Markets, t in TimePeriods: t > 0} unsatisfied_demand[p,k,t] := 
+    if k in ExtremeMarkets then
+        (if t <= card(TimePeriods)-3 then delta[p,k,t+2] - sum{d in Depots} Deliver[p,d,k,t] else 0)
+    else
+        (if t <= card(TimePeriods)-2 then delta[p,k,t+1] - sum{d in Depots} Deliver[p,d,k,t] else 0);
+
+# Display unsatisfied demand for each product, market, and time period
+printf "\nUnsatisfied Demand:\n";
+for {p in FinalProducts} {
+    printf "\nProduct: %s\n", p;
+    printf "Regular Markets:\n";
+    for {k in Markets diff ExtremeMarkets, t in TimePeriods: t > 0 and t <= card(TimePeriods)-2} {
+        if unsatisfied_demand[p,k,t] > 0 then
+            printf "Market %s, Day %d: %.2f\n", k, t, unsatisfied_demand[p,k,t];
+    }
+    printf "Extreme Markets:\n";
+    for {k in ExtremeMarkets, t in TimePeriods: t > 0 and t <= card(TimePeriods)-3} {
+        if unsatisfied_demand[p,k,t] > 0 then
+            printf "Market %s, Day %d: %.2f\n", k, t, unsatisfied_demand[p,k,t];
+    }
+}
+
+# Calculate total unsatisfied demand for each product
+param total_unsatisfied_demand {p in FinalProducts};
+let {p in FinalProducts} total_unsatisfied_demand[p] := 
+    sum{k in Markets diff ExtremeMarkets, t in TimePeriods: t > 0 and t <= card(TimePeriods)-2} unsatisfied_demand[p,k,t] +
+    sum{k in ExtremeMarkets, t in TimePeriods: t > 0 and t <= card(TimePeriods)-3} unsatisfied_demand[p,k,t];
+
+# Display total unsatisfied demand for each product
+printf "\nTotal Unsatisfied Demand:\n";
+for {p in FinalProducts} {
+    printf "%s: %.2f\n", p, total_unsatisfied_demand[p];
+}

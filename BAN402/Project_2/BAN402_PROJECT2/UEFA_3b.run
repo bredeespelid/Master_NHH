@@ -1,0 +1,132 @@
+#Optimal________________________________________________________
+
+reset;
+model UEFA_3b.mod;
+data UEFA_3b.dat;
+option solver gurobi;
+
+solve;
+
+display(WeightedObjective);
+
+printf "Optimal:\n";
+
+# Print match schedule
+printf "Match schedule:\n";
+for {m in MATCHES} {
+    for {v in VENUES} {
+        if x[m,v].val = 1 then
+            printf "Match %d: %s vs %s on day %d in %s\n", m, team1[m], team2[m], match_date[m], v;
+    }
+}
+
+# Print total travel distance for each team
+printf "\nTotal distance travelled by each team:\n";
+for {t in TEAMS} {
+    printf "%s travelled: %f km\n", t, travel[t];}
+    
+# Display total travel distance for all teams
+display total_travel;
+
+# Display the team with the most and the least travel distance
+printf "\nTeam with the most travel: \n";
+for {t in TEAMS: travel[t] = max_travel} {
+    printf "%s travelled the most with: %f km\n", t, travel[t];
+}
+
+printf "\nTeam with the least travel: \n";
+for {t in TEAMS: travel[t] = min_travel} {
+    printf "%s travelled the least with: %f km\n", t, travel[t];
+}
+
+# Display the difference between the most and least travel
+printf "\nDifference between most and least travel: %f km\n", max_travel - min_travel;
+
+
+#5% slack________________________________________________________
+reset;
+model UEFA_3b_5%.mod;
+data UEFA_3b.dat;
+option solver gurobi;
+
+solve;
+
+display(WeightedObjective);
+
+printf "Optimal_5%:\n";
+
+# Print match schedule
+printf "Match schedule:\n";
+for {m in MATCHES} {
+    for {v in VENUES} {
+        if x[m,v].val = 1 then
+            printf "Match %d: %s vs %s on day %d in %s\n", m, team1[m], team2[m], match_date[m], v;
+    }
+}
+
+# Print total travel distance for each team
+printf "\nTotal distance travelled by each team:\n";
+for {t in TEAMS} {
+    printf "%s travelled: %f km\n", t, travel[t];}
+    
+# Display total travel distance for all teams
+display total_travel;
+
+# Display the team with the most and the least travel distance
+printf "\nTeam with the most travel: \n";
+for {t in TEAMS: travel[t] = max_travel} {
+    printf "%s travelled the most with: %f km\n", t, travel[t];
+}
+
+printf "\nTeam with the least travel: \n";
+for {t in TEAMS: travel[t] = min_travel} {
+    printf "%s travelled the least with: %f km\n", t, travel[t];
+}
+
+# Display the difference between the most and least travel
+printf "\nDifference between most and least travel: %f km\n", max_travel - min_travel;
+
+#10% slack________________________________________________________
+
+reset;
+model UEFA_3b_10%.mod;
+data UEFA_3b.dat;
+option solver gurobi;
+
+solve;
+
+display(WeightedObjective);
+
+printf "Optimal_10%:\n";
+
+# Print match schedule
+printf "Match schedule:\n";
+for {m in MATCHES} {
+    for {v in VENUES} {
+        if x[m,v].val = 1 then
+            printf "Match %d: %s vs %s on day %d in %s\n", m, team1[m], team2[m], match_date[m], v;
+    }
+}
+
+# Print total travel distance for each team
+printf "\nTotal distance travelled by each team:\n";
+for {t in TEAMS} {
+    printf "%s travelled: %f km\n", t, travel[t];}
+    
+# Display total travel distance for all teams
+display total_travel;
+
+# Display the team with the most and the least travel distance
+printf "\nTeam with the most travel: \n";
+for {t in TEAMS: travel[t] = max_travel} {
+    printf "%s travelled the most with: %f km\n", t, travel[t];
+}
+
+printf "\nTeam with the least travel: \n";
+for {t in TEAMS: travel[t] = min_travel} {
+    printf "%s travelled the least with: %f km\n", t, travel[t];
+}
+
+# Display the difference between the most and least travel
+printf "\nDifference between most and least travel: %f km\n", max_travel - min_travel;
+

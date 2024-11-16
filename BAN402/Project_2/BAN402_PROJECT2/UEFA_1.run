@@ -1,0 +1,23 @@
+reset;
+model UEFA_1.mod;
+data UEFA_1.dat;
+option solver gurobi;
+
+solve;
+
+display(TotalDistance);
+
+# Print match schedule
+printf "Match schedule:\n";
+for {m in MATCHES} {
+    for {v in VENUES} {
+        if x[m,v].val = 1 then
+            printf "Match %d: %s vs %s on day %d in %s\n", m, team1[m], team2[m], match_date[m], v;
+    }
+}
+
+# Print total travel distance for each team
+printf "\nTotal distance travelled by each team:\n";
+for {t in TEAMS} {
+    printf "%s travelled: %f km\n", t, travel[t];}
+	
