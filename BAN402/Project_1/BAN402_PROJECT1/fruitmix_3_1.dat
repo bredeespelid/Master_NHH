@@ -1,0 +1,23 @@
+set REGIONS := R1 R2;
+set PORTS := P1 P2;
+set MARKETS := K1 K2 K3 K4 K5 K6 K7 K8 K9 K10 K11 K12 K13 K14 K15 K16 K17 K18 K19 K20;
+
+param supply :=
+R1 200
+R2 250;
+
+param demand :=
+K1 15  K2 23  K3 19  K4 16  K5 26
+K6 13  K7 21  K8 14  K9 16  K10 19
+K11 20 K12 30 K13 27 K14 25 K15 26
+K16 32 K17 25 K18 27 K19 17 K20 13;
+
+param cost_port_market :
+   K1  K2  K3  K4  K5  K6  K7  K8  K9  K10 K11 K12 K13 K14 K15 K16 K17 K18 K19 K20 :=
+P1 9   12  24  27  45  45  90  96  21  30  51  33  84  33  39  24  87  111 21  30
+P2 84  57  15  63  27  24  27  24  102 84  57  87  15  66  114 6   27  30  102 66;
+
+param cost_region_port :
+   P1  P2 :=
+R1 33  45
+R2 42  35;

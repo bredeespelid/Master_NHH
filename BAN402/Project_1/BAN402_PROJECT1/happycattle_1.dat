@@ -1,0 +1,32 @@
+set PRODUCTS := Standard Special Ultra;
+set RAW_MATERIALS := wheat rye grain oats corn;
+
+param demand :=
+Standard 400
+Special  400
+Ultra    0;
+
+param min_demand :=
+Standard 0
+Special  0
+Ultra    350;
+
+param selling_price :=
+Standard 8500
+Special  9000
+Ultra    10000;
+
+param: min_protein max_protein min_carb max_carb min_vitamin max_vitamin :=
+Standard 6  Infinity 35 55 0.5 Infinity
+Special  7  Infinity 40 60 1.0 Infinity
+Ultra    9  Infinity 50 70 1.2 Infinity;
+
+param: cost supply protein carb vitamin :=
+wheat 1500 500  10 60 2.0
+rye   1600 Infinity 10 45 1.0
+grain 1000 600   6 40 0.5
+oats  1700 1000 11 50 2.2
+corn  2500 500  12 40 2.3;
+
+param max_production := 1300;
+param production_cost := 500;

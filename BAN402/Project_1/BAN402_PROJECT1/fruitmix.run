@@ -1,0 +1,50 @@
+# -----------------------Load the model and data for Question 1
+
+reset;
+model fruitmix_1.mod;
+data fruitmix_1.dat;
+option solver cplex;
+solve;
+
+display Total_Cost;# Total cost: 23640
+display x; # Regions to markets
+display y; # Shipments from regions to ports
+display z; # Shipments from ports to markets
+
+# -----------------------Load the model and data for Question 2
+
+reset;
+model fruitmix_2.mod;
+data fruitmix_2.dat;
+option solver cplex;
+solve;
+
+display Total_Cost;# Total_Cost: 28663
+display x;# Regions to markets
+display y;# Shipments from regions to ports
+display z;# Shipments from ports to markets
+
+# -----------------------Load the model and data for Question 3 a)
+
+reset;
+model fruitmix_3_1.mod;
+data fruitmix_3_1.dat;
+option solver cplex;
+solve;
+
+display Total_Cost;# Total_Cost: 25353
+display y;# Shipments from regions to ports
+display z;# Shipments from ports to markets
+
+# -----------------------Load the model and data for Question 3 b)
+
+reset;
+model fruitMix_3_2.mod;
+data fruitMix_3_2.dat;
+option solver cplex;
+solve;
+
+display Total_Cost;# Total_Cost: 26310
+display y;# Shipments from regions to ports
+display z;# Shipments from ports to markets
+

@@ -1,0 +1,19 @@
+set Locations := L1 L2 L3;
+
+param cost :=
+L1 19
+L2 26
+L3 35;
+
+param reduction_P1 :=
+L1 0.15
+L2 0.05
+L3 0.35;
+
+param reduction_P2 :=
+L1 0.20
+L2 0.40
+L3 0.25;
+
+param target_P1 := 35;
+param target_P2 := 40;

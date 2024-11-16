@@ -1,0 +1,41 @@
+# -----------------------Load the model and data for Question 1
+
+reset;
+model happycattle_1.mod;
+data happycattle_1.dat;
+option solver cplex;
+solve;
+
+display profit; # Profit: 9680000
+display production; # Production
+display blend; # Optimal blend
+
+# Most used material is grain with 600
+
+# -----------------------Load the model and data for Question 2
+
+reset;
+model happycattle_2.mod;
+data happycattle_2.dat;
+option solver cplex;
+solve;
+
+display profit; # Profit: 9692000
+display production; # Production
+display blend; # Optimal blend
+display new_wheat_usage; # New wheat usage
+
+#Total usage is 600 for grain & 700 for wheat
+
+# -----------------------Load the model and data for Question 3
+reset;
+model happycattle_3.mod;
+data happycattle_3.dat;
+option solver cplex;
+solve;
+
+display profit; # Profit: 9745000
+display production; # Production
+display blend; # Optimal blend
+
+#Total usage is 600 for grain & 700 for oats

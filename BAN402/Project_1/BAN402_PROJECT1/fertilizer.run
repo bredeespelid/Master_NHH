@@ -1,0 +1,18 @@
+reset; # Reset the AMPL environment
+model fertilizer.mod; # Reset the AMPL environment
+data fertilizer.dat; # Load the data
+option solver cplex;
+option presolve 0;
+option cplex_options 'sensitivity';
+solve; # Solve the model
+
+# Display results
+display x;
+display Total_Cost;
+
+# Display sensitivity information, put it in command so I didn't have to run
+# the code again
+
+display P1_Reduction, P1_Reduction.down, P1_Reduction.current, P1_Reduction.up;
+
+display x.rc;  # Reduced_costs
