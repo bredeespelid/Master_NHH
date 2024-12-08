@@ -9,6 +9,7 @@ packages <- c(
 
 # Install all packages (installs only those not already installed)
 install.packages(packages)
+liba
 
 library(tidyverse)
 library(ggplot2)
@@ -381,3 +382,118 @@ pl + geom_hex() +
 #Density
 
 pl + geom_density2d() 
+
+#Facit grid
+
+#The syntax for x axis is 
+facet_grid(cyl~. )
+
+#The syntax for y axis is 
+facet_grid(.~cyl )
+
+
+#Themes
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggthemes )
+
+
+#theme_set(theme_minimal())
+pl <- mtcars %>% 
+  ggplot(aes(
+    x= wt, y = mpg 
+  ))+
+  geom_point()
+
+#Well known themes
+pl + theme_economist()
+pl + theme_fivethirtyeight()
+pl + theme_wsj()
+
+head(mtcars)
+
+#Geom smooth
+ggplot(mpg, aes(displ, hwy, colour = class)) +
+  geom_point() +
+  geom_smooth(se = FALSE, method = "lm", formula = y~log(x))
+
+#Worth looking into PLOTLY
+
+# Introduction to Machine Learning ----------------------------------------
+
+# any(is.na(df)) if any values in a df is na values
+
+#Corr graphing
+library(nycflights13)
+library(tidyr)
+library(dplyr)
+
+num.cols<- mtcars %>% 
+  sapply(.,is.numeric)
+
+cor.data <- cor(mtcars[,num.cols])
+print(cor.data)
+
+library(corrplot)
+print(corrplot(cor.data, method = "color"))
+
+# First you would need the catools to get the sample split
+# Then you would need to make the split where example
+# 70% is training data and 30% is test data
+#Training data
+library(caTools)
+set.seed(10)
+#Making a training data in this case 70%
+sample <- sample.split(mtcars$cyl, SplitRatio = 0.7)
+train<- subset(mtcars, sample == T)
+test <- subset(mtcars, sample == F)
+
+#Building the model
+model <- lm(cyl ~ ., train )
+
+summary(model)
+
+res<- residuals(model)
+res <- as.data.frame(res)
+head(res)
+
+library(ggplot2)
+ggplot(res,aes(res))+ geom_histogram(fill="blue",binwidth = 0.3)
+
+#Plot(model) for advanced models
+
+#Predictions
+Cyl.predictions<- predict(model,test)
+results <- cbind(Cyl.predictions,test$cyl )
+colnames(results)<- c("predicted", "actual")
+results <- as.data.frame(results)
+head(results)
+
+#Take care of negative values
+
+to_zero <- function(x){
+  if(x<0){
+    return(0)
+  }else{
+    return(x)
+  }
+}
+
+results$predicted <- sapply(results$predicted, to_zero)
+
+
+#Mean Squared Error
+
+mse <- mean((results$actual-results$predicted)^2)
+print(mse)
+
+print(mse^0.5)
+
+
+
+# K-nearest neighbours ----------------------------------------------------
+
+# Standardize the data with scale
+
+
