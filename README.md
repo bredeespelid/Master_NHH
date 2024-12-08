@@ -46,5 +46,5 @@ This repository includes:
 - Notes and summaries for key topics  
 - Explorations and insights related to Business Analytics  
 
-**Disclaimer:** This repository is a personal space for learning and sharing academic work. Use the content responsibly!
+
 
