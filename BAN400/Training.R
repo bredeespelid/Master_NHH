@@ -730,7 +730,7 @@ bind_rows(auc_tree, auc_rf)
 # We see that the random forest is much better -- makes almost perferct
 # classifications.
 
-# XGBOOST --------
+
 xgb_mod <- 
   boost_tree(
     trees = 1000, 
@@ -1088,4 +1088,187 @@ mtcars %>%
   
 
 
-       
+#Machine learning decision tree
+install.packages("rpart.plot")
+library(rpart.plot)
+library(rpart)
+library(broom)
+str(kyphosis)
+
+head(kyphosis)
+head(mtcars)
+
+tree <- rpart(hp ~., method = "class", data =mtcars)
+printcp(tree)
+#plot(tree, uniform = T, main = "Kyphosis Tree")
+#text(tree, use.n=T,all=T)
+
+prp(tree)
+
+#Random forest
+
+install.packages("randomForest")
+library(randomForest)
+rf.model <- randomForest(Kyphosis~ . , data = kyphosis)
+
+print(rf.model$ntree)
+
+
+# Patchwork ---------------------------------------------------------------
+
+
+library(ggplot2)
+# You can add plots saved to variables
+
+p1 <- ggplot(mtcars) + geom_point(aes(mpg, disp))
+p2 <- ggplot(mtcars) + geom_boxplot(aes(gear, disp, group = gear))
+
+p1 + p2
+
+
+
+# Real life example -------------------------------------------------------
+
+library(jsonlite)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
+library(purrr)
+library(lubridate)
+library(forcats)
+library(ggthemes)
+df <- fromJSON('Google_Ratings.json', simplifyVector = T)
+
+
+df<- df %>% separate(Dato, c("Dato", "UTF"), sep = "T") %>% 
+  select(-UTF) %>% 
+  unnest(categories)%>% 
+  mutate(Dato = ymd(Dato)) %>% 
+  separate(Avd, c("Avd","Navn"),sep=" ")
+  
+df <- as.data.frame(df) %>% 
+  rename(Rating = "???") %>% 
+  mutate(Avd = as_factor(Avd))
+
+df <- df %>% 
+  filter(Avd != "16")
+
+
+# Antall tilbakemeldinger --------------------------------------------------------
+
+
+pl <- df %>% filter('Ingen kommentar' != 1) %>% 
+  ggplot(aes(
+  fct_infreq(Avd)
+))
+pl+ geom_bar(
+  na.rm=T) + 
+  theme_wsj()+
+  labs(title= "Antall Tilbakemeldinger")
+
+# Fitted ------------------------------------------------------------------
+
+library(janitor)
+
+df <- df %>%
+  clean_names()
+
+# colnames(df)
+# library(janitor)
+# library(ggplot2)
+# library(dplyr)
+# library(tidyr)
+# library(forcats)
+# 
+# # Rens data og filtrer for ??nsket periode
+# df <- df %>%
+#   clean_names()
+# 
+# # Legg til ??r basert p?? dato
+# df <- df %>%
+#   mutate(aar = case_when(
+#     dato >= as.Date("2023-01-01") & dato <= as.Date("2024-12-31") ~ "2023/2024",
+#     dato >= as.Date("2022-01-01") & dato <= as.Date("2022-12-31") ~ "2022/2023",
+#     TRUE ~ "Tidligere"
+#   ))
+# 
+# # Reshape data til langt format og ta med dato og ??r
+# df_long <- df %>%
+#   pivot_longer(
+#     cols = c(dyre_produkter, darlige_produkter, 
+#              darlig_kundeservice_opplevelse, lang_ko_ventetid, 
+#              darlig_renhold, ingen_kommentar, annet),
+#     names_to = "complaint",
+#     values_to = "count"
+#   ) %>%
+#   filter(complaint != "ingen_kommentar")
+# 
+# # Oppsummer klager per avdeling og ??r
+# df_summary <- df_long %>%
+#   group_by(avd, aar, complaint) %>%
+#   summarise(total = sum(count), .groups = "drop")
+# 
+# # Lag et facet wrap-stablet stolpediagram
+# ggplot(df_summary, aes(x = fct_inseq(avd), y = total, fill = complaint)) +
+#   geom_bar(stat = "identity", color = "black", position = "fill") +
+#   labs(title = "Fordeling av klager per Avdeling per ??r",
+#        x = "Avdeling",
+#        y = "Andel av Klager",
+#        fill = "Klagetype") +
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+#   facet_wrap(~aar, ncol = 1) # Facet wrap for ??r
+#   
+# head(df)
+
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+
+
+# Reshape data to long format
+df_long <- df %>%
+  pivot_longer(
+    cols = c(dyre_produkter, darlige_produkter, 
+             darlig_kundeservice_opplevelse, lang_ko_ventetid, 
+             darlig_renhold, ingen_kommentar, annet),
+    names_to = "complaint",
+    values_to = "count"
+  ) %>% 
+  mutate(aar = case_when(
+    dato >= as.Date("2023-01-01") & dato <= as.Date("2024-12-31") ~ "23/24",
+    dato >= as.Date("2021-01-01") & dato <= as.Date("2022-12-31") ~ "21/22",
+    dato >= as.Date("2019-01-01") & dato <= as.Date("2020-12-31") ~ "19/20",
+    TRUE ~ "Tidligere"
+  ))
+
+# Summarize the complaint counts per department
+df_summary <- df_long %>%
+  group_by(avd, complaint, aar) %>%
+  filter(aar!="Tidligere") %>% 
+  summarise(total = sum(count), .groups = "drop") %>% 
+  filter(complaint != "ingen_kommentar" )
+
+
+# Create a stacked barplot
+Fordeling <- ggplot(df_summary, aes(y = fct_inseq(avd), x = total, fill = complaint)) +
+  geom_bar(stat = "identity", 
+           color = "black"
+           #,position = "fill"
+           ) +
+  labs(title = "Fordeling av klager per Avdeling 2019-2024",
+       x = "Department",
+       y = "Total Complaints",
+       fill = "Klagetype") +
+  theme_wsj() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+Fordeling + facet_grid(aar~.)
+
+
+# Random forest -----------------------------------------------------------
+
+
