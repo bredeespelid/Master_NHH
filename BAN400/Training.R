@@ -495,5 +495,38 @@ print(mse^0.5)
 # K-nearest neighbours ----------------------------------------------------
 
 # Standardize the data with scale
+install.packages("ISLR")
+library(ISLR)
+library(caTools)
+str(Caravan)
+summary(Caravan$Purchase)
+
+any(is.na(Caravan))
 
 
+var(Caravan[,1])
+var(Caravan[,2])
+
+purchase <- Caravan[,86]
+
+# Important to standardize when dealing with K-neaerst neighbors
+# Because of the distance
+
+standardized.Caravan <- scale(Caravan[,-86])
+print(var(standardized.Caravan[,1]))
+print(var(standardized.Caravan[,2]))
+
+test.index<- 1:1000
+test.data <- standardized.Caravan[test.index,]
+test.purchase <- purchase[test.index]
+
+train.data <- standardized.Caravan[-test.index,]
+train.purchase <- purchase[-test.index]
+
+#Building the KNN MODEL
+
+library(class)
+set.seed(101)
+predicted.purchase <- knn(train.data,test.data,train.purchase, k=1)
+
+print(head(predicted.purchase))
