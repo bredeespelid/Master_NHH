@@ -1,6 +1,6 @@
 # Exam Preparation: Required R Packages
 
-This repository lists and provides installation instructions for the R packages required for your exam. Follow the steps below to ensure all necessary packages are installed and ready to use.
+This repository lists and provides installation instructions for the R packages required the exam. 
 
 ## Overview of Packages
 
