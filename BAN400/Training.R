@@ -531,45 +531,6 @@ predicted.purchase <- knn(train.data,test.data,train.purchase, k=1)
 
 print(head(predicted.purchase))
 
-#Iterations
-
-library(purrr) 
-library(tidyverse)
-
-df <- tibble(
-  a = rnorm(10),
-  b = rnorm(10),
-  c = rnorm(10),
-  d = rnorm(10)
-)
-
-col_summary <- function(df, fun) {
-  out <- vector("double", length(df))
-  for (i in seq_along(df)) {
-    out[i] <- fun(df[[i]])
-  }
-  out
-}
-
-df |> 
-  map(mean, trim=.1) |> 
-  bind_cols()
-
-#Anonymous function
-
-mtcars |>                       
-  split( ~ cyl) |>              
-  map({
-    \(x)lm(mpg ~ wt, data = x)
-  }) |>
-  map(summary) |>
-  map({
-    \(x) x$r.squared
-  }) |>
-  bind_cols()
-
-
-
 # Load packages -----
 library(readr)
 library(dplyr)
@@ -855,3 +816,276 @@ bind_rows(auc_tree, auc_rf, auc_xgb)
 # to perfect classification.
 
 
+#Iterations
+
+library(purrr) 
+library(tidyverse)
+
+df <- tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+col_summary <- function(df, fun) {
+  out <- vector("double", length(df))
+  for (i in seq_along(df)) {
+    out[i] <- fun(df[[i]])
+  }
+  out
+}
+
+df |> 
+  map(mean, trim=.1) |> 
+  bind_cols()
+
+#Anonymous function
+
+mtcars |>                       
+  split( ~ cyl) |>              
+  map({
+    \(x)lm(mpg ~ wt, data = x)
+  }) |>
+  map(summary) |>
+  map({
+    \(x) x$r.squared
+  }) |>
+  bind_cols()
+
+
+head(mtcars)
+str(mtcars)
+
+library(purrr)
+mtcars %>% 
+  map({
+      \(z) 
+    
+    ceiling(mean(z)%%2)
+    
+    }) %>% 
+  rbind()
+
+# Pivot w/l ------------------------------------------------------
+
+relig_income
+relig_income %>%
+  pivot_longer(!religion, names_to = "income", values_to = "count")
+
+fish_encounters
+fish_encounters %>%
+  pivot_wider(names_from = station, values_from = seen)
+# Fill in missing values
+fish_encounters %>%
+  pivot_wider(names_from = station, values_from = seen, values_fill = 0)
+
+# Parallel computing ------------------------------------------------------
+library(tidyverse)
+
+load("parallel_data.Rdata")
+
+sales_price_mnok <- 1
+car_cost_mnok <- .95
+
+df %>%
+  head() %>% 
+  knitr::kable()
+
+calcProfits <-
+  function(df,
+           sales_price_mnok,
+           car_cost_mnok,
+           lead_days) {
+    df %>%
+      mutate(
+        sales_price_BTC = sales_price_mnok / NOKBTC,
+        mNOK_val_sales =
+          lead(NOKBTC, lead_days, order_by = date)
+        * sales_price_BTC,
+        profit_mnok = mNOK_val_sales - car_cost_mnok
+      )
+  }
+
+
+initial_equity <- 10
+
+test_neg_equity <-
+  function(df, startdate, lead_days) {
+    tmpdf <-
+      df %>%
+      filter(date >= startdate) %>%
+      calcProfits(sales_price_mnok, car_cost_mnok, lead_days) %>%
+      filter(complete.cases(.))
+    
+    if (nrow(tmpdf) > 0) {
+      tmpdf %>%
+        mutate(cumulative_profits_mnok = cumsum(profit_mnok)) %>%
+        summarise(negative_equity =
+                    1 * (min(
+                      cumulative_profits_mnok + initial_equity
+                    ) < 0)) %>%
+        pull %>%
+        return
+    } else{
+      return(NA_real_)
+    }
+  }
+
+library(tictoc)
+
+# We can use tictoc to time a function..:
+tic()
+Sys.sleep(1)
+toc()
+
+printTicTocLog <-
+  function() {
+    tic.log() %>%
+      unlist %>%
+      tibble(logvals = .) %>%
+      separate(logvals,
+               sep = ":",
+               into = c("Function type", "log")) %>%
+      mutate(log = str_trim(log)) %>%
+      separate(log,
+               sep = " ",
+               into = c("Seconds"),
+               extra = "drop")
+  }
+
+tic.clearlog()
+
+tic("Test")
+Sys.sleep(1)
+toc(log = TRUE)
+
+
+df_res <-
+  expand.grid(date = df$date,
+              lead_days = c(1, 5, 10, 30, 60)) %>%
+  mutate(neg_eq = NA) %>%
+  as_tibble()
+
+
+tic.clearlog()
+tic("Regular loop")
+
+for (i in 1:nrow(df_res)) {
+  df_res$neg_eq[i] <-
+    test_neg_equity(df,
+                    startdate = df_res$date[i],
+                    lead_days = df_res$lead_days[i])
+}
+
+toc(log = TRUE)
+
+
+library(doParallel)
+
+# The function detectCores finds the number of cores
+# available on the machine. We update the "Cores"-value
+# to the minimum of the chosen cores and the available cores.
+maxcores <- 8
+Cores <- min(parallel::detectCores(), maxcores)
+
+# Instantiate the cores:
+cl <- makeCluster(Cores)
+
+# Next we register the cluster..
+registerDoParallel(cl)
+
+# Take the time as before:
+tic(paste0("Parallel loop, ", Cores, " cores"))
+res <-
+  foreach(
+    i = 1:nrow(df_res),
+    .combine = 'rbind',
+    .packages = c('magrittr', 'dplyr')
+  ) %dopar%
+  tibble(
+    date = df_res$date[i],
+    lead_days = df_res$lead_days[i],
+    neg_eq =
+      test_neg_equity(
+        df,
+        startdate = df_res$date[i],
+        lead_days = df_res$lead_days[i]
+      )
+  )
+
+# Now that we're done, we close off the clusters
+stopCluster(cl)
+
+toc(log = TRUE)
+
+library(purrr)
+
+tic("purrr")
+df_res$neg_eq <-
+  df %>%
+  map2_dbl(as.list(df_res$date),
+           as.list(df_res$lead_days),
+           test_neg_equity,
+           df = .)
+
+toc(log = TRUE)
+
+
+library(furrr)
+plan(multisession, workers = Cores)
+
+tic(paste0("furrr, ", Cores, " cores"))
+
+df_res$neg_eq <-
+  df %>%
+  future_map2_dbl(as.list(df_res$date),
+                  as.list(df_res$lead_days),
+                  test_neg_equity,
+                  df = .)
+
+toc(log = TRUE)
+
+
+# Many models -------------------------------------------------------------
+
+library(broom)
+library(gapminder)
+library(nnet)
+library(MASS)
+
+example(birthwt)
+
+bwt.mu <- multinom(low ~ ., bwt)
+
+tidy(bwt.mu)
+glance(bwt.mu)
+
+# or, for output from a multinomial logistic regression
+fit.gear <- multinom(gear ~ mpg + factor(am), data = mtcars)
+tidy(fit.gear)
+glance(fit.gear)
+
+mtcars
+lm.M <- lm(cyl ~ ., data= mtcars)
+glance(lm.M)[1,1]
+
+
+mtcars %>% 
+  nest(data = -cyl) %>% 
+  mutate(
+    model = map(data,{
+      
+    \(x) lm(mpg~., data=x )
+      
+  }
+  ),
+  
+  glanc = map(model, glance)
+    ) %>% 
+  unnest(glanc) %>% 
+  select(cyl,)
+  
+
+
+       
