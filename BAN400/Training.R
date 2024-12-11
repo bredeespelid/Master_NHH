@@ -1154,6 +1154,15 @@ df <- as.data.frame(df) %>%
 df <- df %>% 
   filter(Avd != "16")
 
+library(janitor)
+
+df <- df %>%
+  clean_names()
+
+head(df)
+
+df %>% filter(avd == 23,
+              dato > "2022-12-30")
 
 # Antall tilbakemeldinger --------------------------------------------------------
 
@@ -1257,9 +1266,9 @@ df_summary <- df_long %>%
 Fordeling <- ggplot(df_summary, aes(y = fct_inseq(avd), x = total, fill = complaint)) +
   geom_bar(stat = "identity", 
            color = "black"
-           #,position = "fill"
+           ,position = "fill"
            ) +
-  labs(title = "Fordeling av klager per Avdeling 2019-2024",
+  labs(title = "Fordeling av klager per Avdeling 2019-2024 (%)",
        x = "Department",
        y = "Total Complaints",
        fill = "Klagetype") +
