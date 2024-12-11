@@ -32,20 +32,23 @@ world %>% filter(geounit=="Norway") %>%
   ggplot(aes())+
   
 # Using the geom sf to graph geometries  
-  geom_sf(aes(fill = pop_est/1e6))+
+  geom_sf(aes())+
   
 # Setting the limits to the graph   
   coord_sf(x = c(10,33),
-           y= c(75,82)) +
+           y= c(76.7,80.4)) +
   
 # Making a title for the graph
   labs(title = "Svalbard")+
+
+#Making a theme map
+  theme_map()+
   
 # Adjusting the position of the title
   theme(title = 
           element_text(
-            size = 30,
-            hjust= 0.5,
+            size = 25,
+            hjust= 0.7,
             vjust = 0.4
           ),
         legend.title = 
