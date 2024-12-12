@@ -2,6 +2,30 @@
 
 This README explains how to set up and fine-tune a decision tree model step-by-step. Each section breaks down what the code does in simple terms.
 
+
+## Prepare the Data
+Split the data into training and test datasets, and create folds for cross-validation:
+```R
+# Split the data into training and test data, and divide the training data into folds for cross-validation
+set.seed(1)
+spam_split <- initial_split(spam, strata = spam)
+spam_train <- training(spam_split)
+spam_test  <- testing(spam_split)
+
+spam_folds <- vfold_cv(spam_train, strata = spam, v = 3)  # v = 5 or 10 is more common
+```
+- **`initial_split`**: Splits the data into training and testing sets.
+- **`vfold_cv`**: Creates cross-validation folds.
+
+## Define the Recipe
+Specify the preprocessing steps common to all models:
+```R
+# Specify the recipe, that is common for all models
+spam_recipe <- 
+  recipe(spam ~ ., data = spam) 
+```
+- **`recipe`**: Defines the pre-processing steps for the data.
+  
 ## 1. Create the Decision Tree Model
 Here, we define the decision tree and specify the settings we want to adjust:
 ```R
