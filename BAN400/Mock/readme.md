@@ -53,40 +53,28 @@ Compare the runtime of a loop-based summation versus a vectorized approach for s
 ---
 
 ## Part 3: Applied Problems
+
 ### 7. Prediction and Machine Learning
-   - a. Load the `iris` dataset in R.  
-   - b. Split the data into training (80%) and test (20%) sets.  
-   - c. Train a decision tree model to predict the `Species` column using the `rpart` package.  
-   - d. Evaluate the accuracy of the model on the test set.  
-
-### 8. Reproducible Research
-Write an R script that reads in a CSV file, performs exploratory data analysis (EDA), and outputs a formatted HTML report using the `rmarkdown` package.
-
-### 9. Visualization
-Using the `mtcars` dataset:
-- Create a scatter plot of `mpg` (miles per gallon) versus `hp` (horsepower).  
-- Add a trend line to the scatter plot.  
-- Save the plot as a PNG file.  
-
-### 10. Business and Economics Application
-The file `sales.csv` contains columns `Region`, `Product`, and `Sales`. Write an R script to:
-- Calculate the total sales per region and product.  
-- Create a bar chart showing the total sales per region.  
-- Interpret the results for a business context.  
+1. Load the `flights` dataset from the `nycflights13` package.
+2. Filter the dataset to include only flights with complete data for `arr_delay`, `dep_delay`, and `origin`.
+3. Split the filtered data into training (80%) and test (20%) sets.
+4. Train a decision tree model to predict the `origin` column (airport of origin) using the `rpart` package.
+5. Evaluate the accuracy of the model on the test set.
 
 ---
 
-## Part 4: General Competence
-### 11. Standardized and Documented Code
-Write an R script that calculates the factorial of a number using recursion. Ensure the script:
-- Is well-documented with comments.  
-- Follows best practices for formatting and readability.  
+### 8. Visualization
+1. Load the `mtcars` dataset.
+2. Create a scatter plot of `mpg` (miles per gallon) versus `hp` (horsepower).
+3. Add a trend line to the scatter plot.
 
-### 12. Reproducibility
-Write an R script that:
-- Generates a reproducible random sample of 100 numbers from a normal distribution with a mean of 50 and a standard deviation of 10.  
-- Saves the generated data to a CSV file.  
+---
 
+### 9. Business and Economics Application
+1. Load the `ChickWeight` dataset.
+2. Calculate the total weight gain per `Diet`.
+3. Create a bar chart showing the average weight gain per diet.
+4. Interpret the results in a biological or experimental context.
 ---
 
 ### Grading Criteria
