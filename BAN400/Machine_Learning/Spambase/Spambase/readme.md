@@ -1,4 +1,4 @@
-# README for Decision Tree Model Setup
+# Decision Tree Model Setup
 
 This README explains how to set up and fine-tune a decision tree model step-by-step. Each section breaks down what the code does in simple terms.
 
