@@ -1,4 +1,4 @@
-# README for Decision Tree and Random Forest Model Setup
+# Random Forest Model Setup
 
 This README explains how to set up and fine-tune decision tree and random forest models step-by-step. Each section breaks down what the code does in simple terms.
 
