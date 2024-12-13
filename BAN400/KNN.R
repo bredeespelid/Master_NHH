@@ -1,59 +1,39 @@
 # Load libraries
 library(tidymodels)
 
-# 1. Split the dataset
+# Split data into training and testing sets
 set.seed(123)
-data_split <- initial_split(data, prop = 0.8)
+data_split <- initial_split(titanic, prop = 0.8, strata = Survived)
 train_data <- training(data_split)
 test_data <- testing(data_split)
 
-# 2. Create cross-validation folds
-set.seed(123)
-folds <- vfold_cv(train_data, v = 5)
+# Create a recipe
+knn_recipe <- recipe(Survived ~ ., data = train_data)
 
-# 3. Define the KNN model with a tunable parameter
-knn_model <- nearest_neighbor(neighbors = tune()) %>%
+# Define the KNN model with default parameters
+knn_model <- nearest_neighbor() %>%
   set_engine("kknn") %>%
   set_mode("classification")
 
-# 4. Define the recipe
-knn_recipe <- recipe(target ~ ., data = train_data)
-
-# 5. Create the workflow
+# Create a workflow
 knn_workflow <- workflow() %>%
   add_recipe(knn_recipe) %>%
   add_model(knn_model)
 
-# 6. Set up a tuning grid
-knn_grid <- grid_regular(
-  neighbors(range = c(1, 50)),
-  levels = 10
+# Fit the KNN model to the training data
+knn_fit <- fit(knn_workflow, data = train_data)
+
+# Predict on test data
+test_predictions <- predict(knn_fit, test_data, type = "prob")
+
+# Add predictions to the test dataset
+test_data <- bind_cols(test_data, test_predictions)
+
+# Calculate AUC for the test data
+knn_auc <- roc_auc(
+  data = test_data,
+  truth = Survived,
+  .pred_1  # Probability for class "1" (survived)
 )
 
-# 7. Perform hyperparameter tuning
-set.seed(123)
-knn_results <- tune_grid(
-  knn_workflow,
-  resamples = folds,
-  grid = knn_grid,
-  metrics = metric_set(roc_auc)
-)
-
-# 8. Select the best parameters
-best_knn_params <- select_best(knn_results, "roc_auc")
-
-# 9. Finalize the workflow with the best parameters
-final_knn_workflow <- finalize_workflow(knn_workflow, best_knn_params)
-
-# 10. Fit the final model on the training data
-final_knn_model <- fit(final_knn_workflow, data = train_data)
-
-# 11. Predict on test data
-test_predictions <- predict(final_knn_model, test_data, type = "prob")
-
-# 12. Calculate AUC for test data
-test_auc <- roc_auc_vec(
-  truth = test_data$target,
-  estimate = test_predictions$.pred_1
-)
-print(test_auc)
+print(knn_auc)
