@@ -21,7 +21,6 @@ The courses cover various topics, including AI, programming, data analysis, fina
 - **BAN425**: Applied Risk Management  
 - **BAN426**: Applied Data Science  
 - **BAN444**: Digital Identity Management: Technology and Applications
-- **BUS465**: Detecting Corporate Crime  
 - **FIE463**: Numerical Methods in Macroeconomics and Finance using Python  
 
 ---
