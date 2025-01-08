@@ -19,7 +19,6 @@ The courses cover various topics, including AI, programming, data analysis, fina
 - **BAN403**: Simulation of Business Processes  
 - **BAN404**: Statistical Learning  
 - **BAN425**: Applied Risk Management  
-- **BAN426**: Applied Data Science  
 - **BAN444**: Digital Identity Management: Technology and Applications
 - **FIE463**: Numerical Methods in Macroeconomics and Finance using Python
 - **ENE467**: Energy and Climate Policy
