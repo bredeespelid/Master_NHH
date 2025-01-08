@@ -21,17 +21,15 @@ The courses cover various topics, including AI, programming, data analysis, fina
 - **BAN425**: Applied Risk Management  
 - **BAN426**: Applied Data Science  
 - **BAN444**: Digital Identity Management: Technology and Applications
-- **FIE463**: Numerical Methods in Macroeconomics and Finance using Python  
-
+- **FIE463**: Numerical Methods in Macroeconomics and Finance using Python
+- **ENE467**: Energy and Climate Policy
+- **STR459**: Artificial Intelligence and Robotics
 ---
 
 ### **2025 Fall**
-- **BAN423**: Benchmarking with DEA, SFA, and R  
-- **BAN427**: Insurance Analytics  
 - **BAN432**: Applied Textual Data Analysis for Business and Finance  
-- **BAN435**: Blockchain Technology and Applications  
 - **FIE402**: Corporate Finance  
-
+- **ENE423**: Economics of the Environment and Climate
 ---
 
 ### **2026 Spring**
