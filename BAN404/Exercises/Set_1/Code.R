@@ -62,7 +62,6 @@ o  # Output: Indices of the 3 closest points
 ypred <- mean(y[o])
 ypred
 
-
 #e
 
 # Plot the data
@@ -80,7 +79,6 @@ legend("topright", legend = c("Linear Regression", "KNN (K=1)", "KNN (K=3)", "KN
 
 
 # Task_2 ------------------------------------------------------------------
-
 
 # Load necessary package
 library(ISLR)
@@ -116,6 +114,8 @@ summary(m2)
 
 # Predict on the training set
 pred_train_m2 <- predict(m2)
+pred_train_m2
+
 
 # Calculate training-MSE
 mse_train_m2 <- mean((train$Apps - pred_train_m2)^2)
