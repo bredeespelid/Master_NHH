@@ -13,3 +13,10 @@ xdata %>%
 
 
 plot(Volume ~ Direction, data = Weekly)
+
+#b 
+
+formula1 <- Direction~Lag1+Lag2+Lag3+Lag4+Lag5
+
+logreg <- glm(formula1, data = Weekly, family = "binomial")
+summary(logreg)
