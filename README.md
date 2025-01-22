@@ -1,6 +1,7 @@
 # Master_NHH 📚
 
 This repository contains material from my coursework during my Master’s program at **NHH Norwegian School of Economics**, with a focus on **Business Analytics** and minor in **Finance** . 
+
 The courses cover various topics, including AI, optimization, statistics, programming, data analysis, finance, strategy and corporate responsibility.
 
 ---
