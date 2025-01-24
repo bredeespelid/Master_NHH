@@ -15,6 +15,7 @@ page = 1
 try:
     all_episodes = []
 
+
     # Fetch episodes from the API
     while len(all_episodes) < episodes_needed:
         response = requests.get(series_url, params={"page": page})
