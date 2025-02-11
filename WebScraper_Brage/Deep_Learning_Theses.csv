@@ -1,0 +1,13 @@
+,Tittel,Abstrakt,Årstall
+551,Bu y on Intraday Market or not: A Deep Learning Approach :A decision tool for buyers in the Norwegian electricity markets to decide optimal market to purchase electricity,"As the share of variable renewable energy sources increases, so does the need for near-delivery
+offloading of surplus electricity. The availability of potentially cheap energy sources in intraday
+markets begs warrants ...",2022
+719,Prediction of Stock Market Volatility Utilizing Sentiment from News and Social Media Texts : A study on the practical implementation of sentiment analysis and deep learning models for predicting day-ahead volatility,"This thesis studies the impact of sentiment on the prediction of volatility for 100 of the largest
+stocks in the S&P500 index. The purpose is to find out if sentiment can improve the forecast
+of day-ahead volatility ...",2022
+1895,Artificial Intelligence and Nord Pool’s intraday electricity market Elbas : a demonstration and pragmatic evaluation of employing deep learning for price prediction : using extensive market data and spatio-temporal weather forecasts,"This thesis demonstrates the use of deep learning for automating hourly price forecasts in continuous
+intraday electricity markets, using various types of neural networks on comprehensive
+sequential market data and ...",2018
+1961,Employing deep learning for stock return prediction on the Oslo Stock Exchange : a comprehensive test of deep learning models for predictive purposes and applicability to trading,"We predict daily out-of sample directional movements of the constituent stocks of the Oslo
+Stock Exchange Benchmark Index (OSEBX) using Long Short-Term Memory (LSTM) net
+works, benchmarked against other machine learning ...",2018
