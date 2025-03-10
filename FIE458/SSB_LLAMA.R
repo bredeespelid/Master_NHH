@@ -1,4 +1,3 @@
-
 library(httr)
 library(jsonlite)
 library(dplyr)
@@ -7,6 +6,11 @@ library(stringr)
 library(ggplot2)
 
 set.seed(123)
+
+
+
+# SSB ---------------------------------------------------------------------
+
 
 # API URL for SSB JSON-stat dataset
 ssb_url <- "https://data.ssb.no/api/v0/dataset/45590.json?lang=no"
@@ -93,6 +97,9 @@ df <- df %>%
 # Sjekk resultatet
 head(df)
 
+
+# LLAMA -------------------------------------------------------------------
+
 # Define API URL
 ollama.base.url <- "http://localhost:11434"
 ollama.url <- paste0(ollama.base.url, "/api/generate")
@@ -106,6 +113,7 @@ generate.graph <- toJSON(list(
   1. Use the excisting dataframe df, which contains:
      - A column named 'Date' (formatted as a Date object) representing time.
      - A column named 'Verdi' representing numerical values.
+     - Do not make a dataframe. 
   
   2. Generate a basic scatter plot with:
      - X-axis: 'Date'
